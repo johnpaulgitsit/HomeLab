@@ -4,3 +4,4 @@ General Tools used
 - Proxmox
 - OPNsense Router/Firewall.   Virtual Switch bridges vmbr0, vmbr1
 - Windows 11, Windows Server 2022
+- Active Directory (OU, Group Policy, Users, Admin))
