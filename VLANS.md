@@ -1,4 +1,4 @@
-_ The Plan for VLANs _
+# The Plan for VLANs 👨🏾‍💻 #
 
 
 | VLAN | Name          | Subnet           | Purpose                                   | Status                 |
@@ -6,13 +6,9 @@ _ The Plan for VLANs _
 | 1    | Management    | `192.168.1.0/24` | management/network infrastructure         | Existing               |
 | 20   | Servers       | '192.168.20.0/24 | AD, DNS, Windows Server, etc.             | Planned / Implementing |
 | 30   |Users/Corporate| 192.168.30.0/24  | Windows 11 client devices                 | Planned                |
-
-
-
 | 40   | IT/Admin      | 192.168.40.0/24  | For IT team and higher level access       | TBD                    |
 | 50   | Guest         | 192.168.50.0/24  | Open for public Users to connect          | TBD                    |
-
 | 60   | File Storage  | 192.168.60.0/24  | Ubuntu/file server                        | TBD                    |
-| 70   | Security      | 192.168.70.0/24  | Ubuntu/file server                        | TBD                    |
+| 70   | Security      | 192.168.70.0/24  | Any kind of Security/IDS or monitoring tools                     | TBD                    |
 
 
