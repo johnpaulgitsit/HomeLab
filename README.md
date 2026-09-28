@@ -1,69 +1,92 @@
-# Enterprise Homelab Infrastructure & Cybersecurity Lab
+# Tools & Infrastructure
 
-> A self-hosted enterprise-style infrastructure and cybersecurity lab built with Proxmox VE, OPNsense, Windows Server, Active Directory, and VLAN segmentation.
+## Hardware
 
-## Overview
+### ThinkCentre M73
+- Dedicated physical firewall and router running pfSense/OPNsense
+- Provides inter-VLAN routing, firewall enforcement, and network segmentation
+- Serves as the primary gateway between the lab network and the home network/internet
+- Hosts VLAN interfaces and their associated gateway addresses
 
-This project is an ongoing enterprise-style homelab designed to develop hands-on experience in **networking, virtualization, systems administration, Active Directory, and cybersecurity**.
+### Dell OptiPlex 3050 SFF
+- Primary Proxmox virtualization host
+- Hosts Windows Server and other virtual machines supporting the lab's server infrastructure
+- Connects to the Cisco managed switch through the Server VLAN
+- Used for virtualized infrastructure and network services
 
-The environment currently includes:
+### Dell Latitude E6320
+- Physical Windows endpoint
+- Planned Active Directory domain-joined client
+- Used to test endpoint management, Group Policy, and client connectivity across VLANs
 
-* **Proxmox VE** — Virtualization platform
-* **OPNsense** — Router, firewall, and DHCP
-* **Windows Server** — Active Directory Domain Controller and DNS
-* **Windows 11** — Domain-joined client
-* **Active Directory** — Users, Computers, OUs, and administrative accounts
-* **VLANs** — Network segmentation currently being implemented
+### Cisco RV110W-A-NA-K9 V03
+- Repurposed as a Guest Access Point
+- Provides wireless connectivity for guest devices
+- Intended to keep guest wireless access separate from internal company networks
 
-
-
-The lab is built incrementally, with the goal of developing a segmented enterprise network and expanding into security hardening, monitoring, and incident response.
-The current network is transitioning from an initial management network toward dedicated VLANs for server and client infrastructure.
-
----
-
-## Network & IP Addressing
-
-The initial lab network uses the `192.168.1.0/24` address space.
-
-* **OPNsense** — Internal gateway: `192.168.1.1`
-* **Windows Server** — Static IP for Domain Controller and DNS
-* **Windows 11 PC1** — DHCP-assigned client IP
-* **Proxmox** — Management infrastructure
-* **VLAN 20** — Planned server network
-
-Detailed addressing information is maintained in [`IP-Addressing/`](IP-Addressing/).
+### Cisco WS-C2960C-12PC-L
+- Managed Layer 2 switch
+- Provides VLAN-based network segmentation and physical device connectivity
+- Configured for access ports and 802.1Q trunking
+- Connects the firewall, Proxmox host, and physical endpoints
 
 ---
 
-## Active Directory
+## Virtualization & Networking
 
-**Windows Server** functions as the lab's **Active Directory Domain Controller (DC)** and provides centralized identity and DNS services.
+### Proxmox VE
+- Virtualization platform running on the Dell OptiPlex 3050 SFF
+- Hosts Windows Server, Windows client, and Linux virtual machines
+- Uses virtual bridges (`vmbr0`, `vmbr1`) for virtual network connectivity
+- Supports the lab's server infrastructure and virtualized services
 
-The current Active Directory environment includes:
+### pfSense / OPNsense
+- Runs on the dedicated ThinkCentre M73 as the physical firewall and router
+- Provides inter-VLAN routing and firewall policy enforcement
+- Uses VLAN interfaces with static gateway addresses
+- Serves as the primary routing point for segmented lab networks
 
-* Active Directory Domain Services (AD DS)
-* DNS
-* Organizational Units (OUs)
-* User accounts
-* Dedicated administrative account
-* Active Directory Users and Computers
-* Domain-joined Windows 11 client
+### Virtual OPNsense
+- Previously used as a virtual router and firewall within Proxmox
+- Supports virtual networking and isolated lab experiments
+- Can be used separately from the physical firewall environment
 
-Windows 11 User PCs use the Domain Controller for DNS and authenticates against the Active Directory domain.
+---
 
+## Operating Systems
 
-Detailed VLAN information is maintained in [`VLANS/`](VLANS/).
+- Windows 11
+- Windows Server 2022
+- Linux distributions for server services and security testing
+- pfSense/OPNsense firewall operating system
 
-As VLANs are implemented, OPNsense will control traffic between network segments through routing and firewall policies.
+---
 
+## Identity & Administration
 
-* **`Topologies/`** — Network topology diagrams
-* **`IP-Addressing/`** — IP assignments and network addressing
-* **`Tools/`** — Platforms and technologies used in the lab
-* **`VLANS/`** — VLAN architecture and segmentation
+### Active Directory Domain Services (AD DS)
+- Centralized identity and authentication for the lab's Windows environment
+- Manages domain users, computer accounts, and Organizational Units (OUs)
+- Supports separate administrative accounts and domain-based access control
+- Provides centralized authentication for domain-joined endpoints
 
+### Group Policy
+- Centralized Windows configuration and security management
+- Applies security settings and configuration policies to domain-joined computers
+- Used to test endpoint hardening and administrative controls
 
-## Project Objective
+---
 
-The long-term goal is to evolve this environment into a realistic enterprise-style infrastructure and cybersecurity lab for practicing **network segmentation, identity and access management, firewall administration, Windows Server, Active Directory, security hardening, monitoring, and incident response**.
+## Network Concepts & Technologies
+
+- VLANs and network segmentation
+- 802.1Q trunking
+- Access ports and VLAN assignment
+- Inter-VLAN routing
+- Firewall rules and traffic filtering
+- DNS and DHCP
+- Active Directory and Group Policy
+- Physical and virtual networking
+- Guest network isolation
+- Server, Management, User, Operations, and Security network segmentation
+- Network gateway configuration and routing
