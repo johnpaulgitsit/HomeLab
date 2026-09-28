@@ -1,92 +1,159 @@
-# Tools & Infrastructure
+# Enterprise Homelab Infrastructure & Cybersecurity Lab
 
-## Hardware
+> A self-hosted, enterprise-style manufacturing company infrastructure and cybersecurity lab built with Proxmox VE, pfSense/OPNsense, Windows Server, Active Directory, and VLAN-based network segmentation.
 
-### ThinkCentre M73
-- Dedicated physical firewall and router running pfSense/OPNsense
-- Provides inter-VLAN routing, firewall enforcement, and network segmentation
-- Serves as the primary gateway between the lab network and the home network/internet
-- Hosts VLAN interfaces and their associated gateway addresses
+## Overview
 
-### Dell OptiPlex 3050 SFF
-- Primary Proxmox virtualization host
-- Hosts Windows Server and other virtual machines supporting the lab's server infrastructure
-- Connects to the Cisco managed switch through the Server VLAN
-- Used for virtualized infrastructure and network services
+This project is an ongoing enterprise-style homelab designed to develop hands-on experience in **networking, virtualization, systems administration, Active Directory, firewall administration, and cybersecurity**.
 
-### Dell Latitude E6320
-- Physical Windows endpoint
-- Planned Active Directory domain-joined client
-- Used to test endpoint management, Group Policy, and client connectivity across VLANs
+The lab simulates the infrastructure of a small manufacturing company with separate network segments for management, servers, operations, IT, guest access, and security.
 
-### Cisco RV110W-A-NA-K9 V03
-- Repurposed as a Guest Access Point
-- Provides wireless connectivity for guest devices
-- Intended to keep guest wireless access separate from internal company networks
+The environment currently includes:
 
-### Cisco WS-C2960C-12PC-L
-- Managed Layer 2 switch
-- Provides VLAN-based network segmentation and physical device connectivity
-- Configured for access ports and 802.1Q trunking
-- Connects the firewall, Proxmox host, and physical endpoints
+- **Proxmox VE** — Virtualization platform for hosting servers and virtual machines
+- **pfSense/OPNsense** — Physical router and firewall running on a ThinkCentre M73
+- **Cisco Catalyst 2960-C** — Managed Layer 2 switch for VLANs and network connectivity
+- **Cisco RV110W** — Repurposed as a guest wireless access point
+- **Windows Server 2022** — Active Directory Domain Controller and DNS
+- **Windows 11** — Domain-joined client for testing endpoint management and Group Policy
+- **Active Directory** — Centralized identity management, user accounts, computers, and administrative accounts
+- **VLANs** — Network segmentation for separating company departments and infrastructure
+
+The lab is built incrementally, with an emphasis on understanding how enterprise networks are designed, secured, and maintained.
 
 ---
 
-## Virtualization & Networking
+## Infrastructure Architecture
+
+The lab uses a dedicated physical firewall to route traffic between VLANs and enforce network access policies.
+
+The Cisco managed switch provides connectivity between the firewall, Proxmox host, and physical endpoints.
+
+Proxmox serves primarily as the virtualization platform for the company's server infrastructure, including Windows Server and other virtual machines.
+
+### Hardware
+
+| Device | Role |
+|---|---|
+| ThinkCentre M73 | Physical firewall and router |
+| Dell OptiPlex 3050 SFF | Proxmox virtualization host |
+| Dell Latitude E6320 | Physical Windows client |
+| Cisco WS-C2960C-12PC-L | Managed Layer 2 switch |
+| Cisco RV110W | Guest wireless access point |
+
+---
+
+## Network & IP Addressing
+
+The network is transitioning from an initial flat management network toward a segmented enterprise-style architecture.
+
+The physical firewall provides gateway interfaces for the VLANs and will enforce traffic restrictions between network segments.
+
+### Planned Network Segments
+
+| VLAN | Department / Network | Purpose |
+|---|---|---|
+| Management | Management | Restricted access to network infrastructure |
+| Servers | Server Infrastructure | Active Directory, DNS, and other server services |
+| Operations | Operations | Manufacturing and operational endpoints |
+| IT | Information Technology | IT administration and support systems |
+| Guest | Guest Network | Internet access for guest devices |
+| Security | Security | Security monitoring and analysis systems |
+
+VLAN IDs, subnet assignments, and gateway addresses are documented in [`IP-Addressing/`](IP-Addressing/) and [`VLANS/`](VLANS/).
+
+---
+
+## Firewall & Network Segmentation
+
+The ThinkCentre M73 runs pfSense/OPNsense and serves as the primary physical router and firewall for the lab.
+
+The firewall is used to:
+
+- Route traffic between VLANs
+- Enforce access control between network segments
+- Restrict access to management interfaces
+- Separate guest traffic from internal company networks
+- Apply firewall rules based on departmental access requirements
+
+Firewall policies are being developed incrementally and tested against the services currently running in the lab.
+
+---
+
+## Virtualization & Server Infrastructure
 
 ### Proxmox VE
-- Virtualization platform running on the Dell OptiPlex 3050 SFF
-- Hosts Windows Server, Windows client, and Linux virtual machines
-- Uses virtual bridges (`vmbr0`, `vmbr1`) for virtual network connectivity
-- Supports the lab's server infrastructure and virtualized services
 
-### pfSense / OPNsense
-- Runs on the dedicated ThinkCentre M73 as the physical firewall and router
-- Provides inter-VLAN routing and firewall policy enforcement
-- Uses VLAN interfaces with static gateway addresses
-- Serves as the primary routing point for segmented lab networks
+Proxmox VE runs on the Dell OptiPlex 3050 SFF and provides the virtualization platform for the lab's server infrastructure.
 
-### Virtual OPNsense
-- Previously used as a virtual router and firewall within Proxmox
-- Supports virtual networking and isolated lab experiments
-- Can be used separately from the physical firewall environment
+Current and planned uses include:
+
+- Hosting Windows Server 2022
+- Hosting Windows and Linux virtual machines
+- Connecting virtual machines to the appropriate network segments
+- Supporting future infrastructure and security services
 
 ---
 
-## Operating Systems
+## Active Directory
 
-- Windows 11
-- Windows Server 2022
-- Linux distributions for server services and security testing
-- pfSense/OPNsense firewall operating system
+**Windows Server 2022** functions as the lab's Active Directory Domain Controller (DC) and provides centralized identity and DNS services.
 
----
+The current Active Directory environment includes:
 
-## Identity & Administration
+- Active Directory Domain Services (AD DS)
+- DNS
+- Organizational Units (OUs)
+- User accounts
+- Dedicated administrative accounts
+- Active Directory Users and Computers
+- Domain-joined Windows 11 client
 
-### Active Directory Domain Services (AD DS)
-- Centralized identity and authentication for the lab's Windows environment
-- Manages domain users, computer accounts, and Organizational Units (OUs)
-- Supports separate administrative accounts and domain-based access control
-- Provides centralized authentication for domain-joined endpoints
+Windows clients use the Domain Controller for DNS resolution and authenticate against the Active Directory domain.
 
-### Group Policy
-- Centralized Windows configuration and security management
-- Applies security settings and configuration policies to domain-joined computers
-- Used to test endpoint hardening and administrative controls
+The server infrastructure is being organized around a dedicated Server VLAN.
 
 ---
 
-## Network Concepts & Technologies
+## Endpoint Management & Group Policy
 
-- VLANs and network segmentation
-- 802.1Q trunking
-- Access ports and VLAN assignment
-- Inter-VLAN routing
-- Firewall rules and traffic filtering
-- DNS and DHCP
-- Active Directory and Group Policy
-- Physical and virtual networking
-- Guest network isolation
-- Server, Management, User, Operations, and Security network segmentation
-- Network gateway configuration and routing
+Group Policy is used to centrally manage and secure domain-joined Windows endpoints.
+
+Planned and ongoing activities include:
+
+- Applying security policies to domain-joined computers
+- Managing user and computer configurations
+- Testing administrative restrictions
+- Implementing endpoint hardening
+- Validating access to internal services across VLANs
+
+---
+
+## Security Monitoring & Future Improvements
+
+The long-term goal is to expand the lab into a more complete enterprise cybersecurity environment.
+
+Planned improvements include:
+
+- **Firewall Policy Development** — Implementing and validating inter-VLAN access controls
+- **Network Segmentation** — Isolating departmental networks and restricting unnecessary communication
+- **Endpoint Hardening** — Applying Windows security configurations through Group Policy
+- **Security Monitoring** — Deploying Security Onion for log analysis and network monitoring
+- **Incident Response** — Simulating security events and investigating activity across the network
+- **Infrastructure Security** — Restricting management access and improving administrative security
+- **Remote Access** — Exploring secure VPN connectivity for remote administration
+
+These features will be introduced as the underlying infrastructure becomes operational.
+
+---
+
+## Repository Structure
+
+```text
+.
+├── Topologies/
+│   └── topo2.png
+├── IP-Addressing/
+├── Tools/
+├── VLANS/
+└── README.md
